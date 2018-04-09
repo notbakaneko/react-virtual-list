@@ -16,6 +16,7 @@ const VirtualList = (options, mapVirtualToProps = defaultMapToVirtualProps) => (
 
     static defaultProps = {
       itemBuffer: 0,
+      columns: 1,
     };
 
     _isMounted = false;
@@ -25,6 +26,7 @@ const VirtualList = (options, mapVirtualToProps = defaultMapToVirtualProps) => (
 
       this.options = {
         container: typeof window !== 'undefined' ? window : undefined,
+        columns: 1,
         ...options,
       };
 
@@ -49,12 +51,12 @@ const VirtualList = (options, mapVirtualToProps = defaultMapToVirtualProps) => (
       }
     };
 
-    setStateIfNeeded(list, container, items, itemHeight, itemBuffer) {
+    setStateIfNeeded(list, container, items, itemHeight, itemBuffer, columns) {
       // get first and lastItemIndex
-      const state = getVisibleItemBounds(list, container, items, itemHeight, itemBuffer);
+      const state = getVisibleItemBounds(list, container, items, itemHeight, itemBuffer, columns);
 
       if (state === undefined) { return; }
-      
+
       if (state.firstItemIndex > state.lastItemIndex) { return; }
 
       if (state.firstItemIndex !== this.state.firstItemIndex || state.lastItemIndex !== this.state.lastItemIndex) {
@@ -66,10 +68,10 @@ const VirtualList = (options, mapVirtualToProps = defaultMapToVirtualProps) => (
       if (!this._isMounted) {
         return;
       }
-      
-      const { itemHeight, items, itemBuffer } = this.props;
 
-      this.setStateIfNeeded(this.domNode, this.options.container, items, itemHeight, itemBuffer);
+      const { itemHeight, items, itemBuffer, columns } = this.props;
+
+      this.setStateIfNeeded(this.domNode, this.options.container, items, itemHeight, itemBuffer, columns);
     };
 
     componentWillMount() {
@@ -98,9 +100,9 @@ const VirtualList = (options, mapVirtualToProps = defaultMapToVirtualProps) => (
 
     // if props change, just assume we have to recalculate
     componentWillReceiveProps(nextProps) {
-      const { itemHeight, items, itemBuffer } = nextProps;
+      const { itemHeight, items, itemBuffer, columns } = nextProps;
 
-      this.setStateIfNeeded(this.domNode, this.options.container, items, itemHeight, itemBuffer);
+      this.setStateIfNeeded(this.domNode, this.options.container, items, itemHeight, itemBuffer, columns);
     };
 
     render() {

@@ -1,6 +1,7 @@
 const defaultMapToVirtualProps = ({
   items,
   itemHeight,
+  columns,
 }, {
   firstItemIndex,
   lastItemIndex,
@@ -8,8 +9,8 @@ const defaultMapToVirtualProps = ({
   const visibleItems = lastItemIndex > -1 ? items.slice(firstItemIndex, lastItemIndex + 1) : [];
 
   // style
-  const height = items.length * itemHeight;
-  const paddingTop = firstItemIndex * itemHeight;
+  const height = Math.ceil(items.length / columns) * itemHeight;
+  const paddingTop = Math.floor(firstItemIndex / columns) * itemHeight;
 
   return {
     virtual: {
